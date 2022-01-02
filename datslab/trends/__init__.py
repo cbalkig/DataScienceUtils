@@ -1,8 +1,9 @@
 import os
+
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from statsmodels.tsa.seasonal import seasonal_decompose
-import matplotlib.pyplot as plt
 
 
 def _clean_file_name(file_name):

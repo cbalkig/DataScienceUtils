@@ -3,4 +3,5 @@ publisher.sh
 /build/*
 /.idea/*
 /dist/*
-/dats*/
+/dats_lab.egg-info/*
+/datslab.egg-info/*

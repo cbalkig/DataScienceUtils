@@ -1,1 +1,6 @@
 .pypirc
+publisher.sh
+/build/*
+/.idea/*
+/dist/*
+/dats*/

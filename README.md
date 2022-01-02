@@ -10,4 +10,4 @@ seasonal_all(df, "USD_mean_Rate", "USD Rate")
 
 trends(df, ["USD_mean_Rate", "Inflation_Rate"], ["USD Rate", "Inflation Rate"])
 
-[trends.png](./images/trends.png)
+![trends.png](./images/trends.png)

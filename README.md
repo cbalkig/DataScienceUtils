@@ -1,6 +1,8 @@
 # Data Science Utilities and Helpers
 
+```
 pip install dats-lab
+```
 
 seasonal_all(df, "USD_mean_Rate", "USD Rate")
 

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import arviz as az
 import numpy as np
 import pymc3 as pm
-from theano import shared
+from theano.compile import shared
 
 
 def _clean_file_name(file_name):
@@ -134,5 +134,3 @@ def apply_linear_regression(df, src_field, src_display, target_field, target_dis
         "summary": summary,
         "error": error
     }
-
-apply_linear_regression()

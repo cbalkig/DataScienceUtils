@@ -33,8 +33,8 @@ def apply_linear_regression(df, src_field, src_display, target_field, target_dis
         )
 
         prior = pm.sample_prior_predictive()
-        trace = pm.sample()
-        ppc = pm.sample_posterior_predictive(trace, var_names=["mu", target_field])
+        trace = pm.sample(tune=2000, draws=10000)
+        ppc = pm.sample_posterior_predictive(trace, var_names=["mu", target_field], samples=4000)
 
         # Plot prior
         fig, ax = plt.subplots()
@@ -83,7 +83,7 @@ def apply_linear_regression(df, src_field, src_display, target_field, target_dis
 
             target = pm.Normal(target_field + "S", muS, sigmaS, observed=df[target_field])
 
-            trace_shared = pm.sample()
+            trace_shared = pm.sample(tune=2000, draws=10000)
 
         data_shared = az.from_pymc3(trace_shared)
 

@@ -27,3 +27,24 @@ trends(df, ["USD_mean_Rate", "Inflation_Rate"], ["USD Rate", "Inflation Rate"], 
 ```
 
 ![trends.png](./images/trends.png)
+
+Linear Regression
+```
+linear_regs["USD"] = apply_linear_regression(df, "U_mean", "USD", "Inf", "Inflation", folder=figures_path)
+```
+```
+linear_regs["USD"]["summary"]
+```
+
+Multi-Linear Regression
+```
+multi_linear_regs["USD_UFE"] = apply_multilinear_regression(df, ["U_mean", "ÜFE"], ["USD", "PPI"], "Inf", "Inflation", folder=figures_path)
+```
+```
+multi_linear_regs["USD_UFE"]["summary"]
+```
+
+Or multicolinarity check:
+```
+multi_linear_regs["USD_on_UFE"] = apply_multilinear_regression_shared_peer(df, ["U_mean", "ÜFE"], "Inf", "U_mean", "USD", "ÜFE", "PPI", folder=figures_path)
+```

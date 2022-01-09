@@ -162,7 +162,7 @@ def apply_multilinear_regression_shared_peer(df, src_fields, target_field, share
         data = az.from_pymc3(trace)
 
         # Calculate summary
-    field_names = ["a", "sigma", shared_src_field]
+    field_names = ["a", "sigma", coef_names[shared_src_field] + "X"]
     summary = az.summary(trace, var_names=field_names, round_to=2)
 
     n_items = int(df.describe()[shared_src_field]["count"])

@@ -1,6 +1,6 @@
 from setuptools import setup
 setup(name='dats-lab',
-      version='0.0.36',
+      version='0.0.37',
       description='Data Science Utilities & Helpers',
       url='https://github.com/cbalkig/DataScienceUtils.git',
       author='C. Balkı Gemirter',

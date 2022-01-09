@@ -30,6 +30,8 @@ def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_col
     plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
+        if not os.path.exists(folder):
+            os.mkdir(folder)
         fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(col_display) + ".png"))
 
     fig, ax = plt.subplots()
@@ -71,4 +73,6 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, colors=None,
     plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
+        if not os.path.exists(folder):
+            os.mkdir(folder)
         fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(file_name) + ".png"))

@@ -168,7 +168,7 @@ def apply_multilinear_regression_shared_peer(df, src_fields, target_field, share
         if src_field == shared_src_field:
             shared_vals[src_field].set_value(xseq)
         elif src_field == shared_target_field:
-            # do nothing
+            print("skip")
         else:
             shared_vals[src_field].set_value(np.zeros(n_items))
 

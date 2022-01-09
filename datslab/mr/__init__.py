@@ -161,6 +161,10 @@ def apply_multilinear_regression_shared_peer(df, src_fields, target_field, share
         trace = pm.sample(tune=2000, draws=10000)
         data = az.from_pymc3(trace)
 
+        # Calculate summary
+    field_names = ["a", "sigma", shared_src_field]
+    summary = az.summary(trace, var_names=field_names, round_to=2)
+
     n_items = int(df.describe()[shared_src_field]["count"])
 
     xseq = np.linspace(df[shared_src_field].min(), df[shared_src_field].max(), n_items)
@@ -188,5 +192,6 @@ def apply_multilinear_regression_shared_peer(df, src_fields, target_field, share
     return {
         "coef": coef_names,
         "model": model,
-        "trace": trace
+        "trace": trace,
+        "summary": summary
     }

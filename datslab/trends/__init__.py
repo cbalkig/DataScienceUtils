@@ -35,7 +35,6 @@ def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_col
     fig, ax = plt.subplots()
     plt.plot(periodic_estimate, color=orig_color)
     plt.xticks(rotation=x_label_rotation)
-    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
         fig.savefig(os.path.join(folder, "Seasonality_" + _clean_file_name(col_display) + ".png"))
@@ -43,7 +42,6 @@ def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_col
     fig, ax = plt.subplots()
     plt.plot(residual, color=orig_color)
     plt.xticks(rotation=x_label_rotation)
-    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
         fig.savefig(os.path.join(folder, "Residuals_" + _clean_file_name(col_display) + ".png"))

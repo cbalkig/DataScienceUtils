@@ -10,11 +10,12 @@ def _clean_file_name(file_name):
     return file_name.strip().replace(" ", "_").replace("/", "_")
 
 
-def seasonal_all(df, src_field, src_display, folder=None):
+def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_color="blue", trend_color="red",
+                 legend_position="best", legend_bbox_to_anchor=None, x_label_rotation=0):
     temp_df = df.copy()
 
-    temp_df.index = pd.to_datetime(temp_df['Date'])
-    series = temp_df[src_field]
+    temp_df.index = pd.to_datetime(temp_df[date_col_name])
+    series = temp_df[col_name]
 
     decompose_data = seasonal_decompose(series, model="additive")
 
@@ -23,46 +24,53 @@ def seasonal_all(df, src_field, src_display, folder=None):
     residual = decompose_data.resid
 
     fig, ax = plt.subplots()
-    plt.plot(series, label='Original ' + src_display, color='blue')
-    plt.plot(trend_estimate, label='Trend of ' + _clean_file_name(src_display), color='red')
-    plt.legend(loc='best')
+    plt.plot(series, label='Original data', color=orig_color)
+    plt.plot(trend_estimate, label='Trend', color=trend_color)
+    plt.xticks(rotation=x_label_rotation)
+    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
-        fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(src_display) + ".png"))
+        fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(col_display) + ".png"))
 
     fig, ax = plt.subplots()
-    plt.plot(periodic_estimate, label='Seasonality of ' + src_display, color='blue')
-    plt.legend(loc='best')
+    plt.plot(periodic_estimate, color=orig_color)
+    plt.xticks(rotation=x_label_rotation)
+    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
-        fig.savefig(os.path.join(folder, "Seasonality_" + _clean_file_name(src_display) + ".png"))
+        fig.savefig(os.path.join(folder, "Seasonality_" + _clean_file_name(col_display) + ".png"))
 
     fig, ax = plt.subplots()
-    plt.plot(residual, label='Decomposition residuals of ' + src_display, color='blue')
-    plt.legend(loc='best')
+    plt.plot(residual, color=orig_color)
+    plt.xticks(rotation=x_label_rotation)
+    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
-        fig.savefig(os.path.join(folder, "Residuals_" + _clean_file_name(src_display) + ".png"))
+        fig.savefig(os.path.join(folder, "Residuals_" + _clean_file_name(col_display) + ".png"))
 
 
-def trends(df, src_fields, src_displays, folder=None):
+def trends(df, col_names, col_displays, date_col_name, folder=None, colors=None, legend_position="best",
+           legend_bbox_to_anchor=None, x_label_rotation=0):
+    if colors is None:
+        colors = ["blue", "red", "green", "yellow"]
     temp_df = df.copy()
 
-    temp_df.index = pd.to_datetime(temp_df['Date'])
+    temp_df.index = pd.to_datetime(temp_df[date_col_name])
 
     file_name = ""
     fig, ax = plt.subplots()
-    for idx in range(len(src_fields)):
-        series = temp_df[src_fields[idx]]
+    for idx in range(len(col_names)):
+        series = temp_df[col_names[idx]]
 
         decompose_data = seasonal_decompose(series, model="additive")
         trend_estimate = decompose_data.trend
 
-        plt.plot(trend_estimate, label='Trend of ' + src_displays[idx])
+        plt.plot(trend_estimate, label=col_displays[idx], color=colors[idx])
 
-        file_name += " " + src_displays[idx]
+        file_name += " " + col_displays[idx]
 
-    plt.legend(loc='best')
+    plt.xticks(rotation=x_label_rotation)
+    plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()
     if folder is not None:
         fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(file_name) + ".png"))

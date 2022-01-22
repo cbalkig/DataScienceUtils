@@ -80,6 +80,7 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=No
         if not os.path.exists(folder):
             os.mkdir(folder)
         if file_name is None:
+            file_name = ""
             for idx in range(len(col_names)):
                 file_name += " " + col_displays[idx]
         fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(file_name) + ".png"))

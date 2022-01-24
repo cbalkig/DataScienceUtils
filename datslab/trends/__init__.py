@@ -75,6 +75,8 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=No
 
     temp_df.index = pd.to_datetime(temp_df[date_col_name])
 
+    min_val = None
+    max_val = None
     fig, ax = plt.subplots()
     for idx in range(len(col_names)):
         series = temp_df[col_names[idx]]
@@ -83,14 +85,23 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=No
         trend_estimate = decompose_data.trend
 
         trend_estimate = trend_estimate.fillna(0)
-        plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
-        plt.ylim(min(trend_estimate), max(trend_estimate))
+        if min_val is None:
+            min_val = min(trend_estimate)
+        elif min_val > min(trend_estimate):
+            min_val = min(trend_estimate)
+
+        if max_val is None:
+            max_val = max(trend_estimate)
+        elif max_val < max(trend_estimate):
+            max_val = max(trend_estimate)
 
         if method == 'plot':
             plt.plot(trend_estimate, label=col_displays[idx], color=colors[idx])
         elif method == 'scatter':
             plt.scatter(temp_df[date_col_name], trend_estimate, label=col_displays[idx], color=colors[idx])
 
+    plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
+    plt.ylim(min_val, max_val)
     plt.xticks(rotation=x_label_rotation)
     plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
     fig.tight_layout()

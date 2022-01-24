@@ -12,7 +12,7 @@ def _clean_file_name(file_name):
 
 def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_color="blue", trend_color="red",
                  legend_position="best", legend_bbox_to_anchor=None, x_label_rotation=0, period=2, plot_trends=True,
-                 plot_seasonal=True, plot_residual=True):
+                 plot_seasonal=True, plot_residual=True, file_name=None):
     temp_df = df.copy()
 
     temp_df.index = pd.to_datetime(temp_df[date_col_name])
@@ -26,6 +26,11 @@ def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_col
 
     if plot_trends:
         fig, ax = plt.subplots()
+
+        trend_estimate = trend_estimate.fillna(0)
+        plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
+        plt.ylim(min(trend_estimate), max(trend_estimate))
+
         plt.plot(series, label='Original data', color=orig_color)
         plt.plot(trend_estimate, label='Trend', color=trend_color)
         plt.xticks(rotation=x_label_rotation)
@@ -34,23 +39,32 @@ def seasonal_all(df, col_name, col_display, date_col_name, folder=None, orig_col
         if folder is not None:
             if not os.path.exists(folder):
                 os.mkdir(folder)
-            fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(col_display) + ".png"))
+            saved_file = file_name if file_name is not None else "Trend_" + _clean_file_name(col_display) + ".png"
+            fig.savefig(os.path.join(folder, saved_file))
 
     if plot_seasonal:
         fig, ax = plt.subplots()
+        periodic_estimate = periodic_estimate.fillna(0)
+        plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
+        plt.ylim(min(periodic_estimate), max(periodic_estimate))
         plt.plot(periodic_estimate, label='Seasonality', color=orig_color)
         plt.xticks(rotation=x_label_rotation)
         fig.tight_layout()
         if folder is not None:
-            fig.savefig(os.path.join(folder, "Seasonality_" + _clean_file_name(col_display) + ".png"))
+            saved_file = file_name if file_name is not None else "Seasonality_" + _clean_file_name(col_display) + ".png"
+            fig.savefig(os.path.join(folder, saved_file))
 
     if plot_residual:
         fig, ax = plt.subplots()
+        residual = residual.fillna(0)
+        plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
+        plt.ylim(min(residual), max(residual))
         plt.plot(residual, label='Residuals', color=orig_color)
         plt.xticks(rotation=x_label_rotation)
         fig.tight_layout()
         if folder is not None:
-            fig.savefig(os.path.join(folder, "Residuals_" + _clean_file_name(col_display) + ".png"))
+            saved_file = file_name if file_name is not None else "Residuals_" + _clean_file_name(col_display) + ".png"
+            fig.savefig(os.path.join(folder, saved_file))
 
 
 def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=None, colors=None, legend_position="best",
@@ -68,10 +82,14 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=No
         decompose_data = seasonal_decompose(series, model="additive", period=period)
         trend_estimate = decompose_data.trend
 
+        trend_estimate = trend_estimate.fillna(0)
+        plt.xlim(min(temp_df[date_col_name]), max(temp_df[date_col_name]))
+        plt.ylim(min(trend_estimate), max(trend_estimate))
+
         if method == 'plot':
             plt.plot(trend_estimate, label=col_displays[idx], color=colors[idx])
         elif method == 'scatter':
-            plt.scatter(df['Date'], trend_estimate, label=col_displays[idx], color=colors[idx])
+            plt.scatter(temp_df[date_col_name], trend_estimate, label=col_displays[idx], color=colors[idx])
 
     plt.xticks(rotation=x_label_rotation)
     plt.legend(loc=legend_position, bbox_to_anchor=legend_bbox_to_anchor)
@@ -83,4 +101,5 @@ def trends(df, col_names, col_displays, date_col_name, folder=None, file_name=No
             file_name = ""
             for idx in range(len(col_names)):
                 file_name += " " + col_displays[idx]
-        fig.savefig(os.path.join(folder, "Trend_" + _clean_file_name(file_name) + ".png"))
+            file_name = _clean_file_name(file_name)
+        fig.savefig(os.path.join(folder, file_name))
